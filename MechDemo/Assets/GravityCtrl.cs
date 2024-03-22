@@ -25,16 +25,25 @@ public class GravityCtrl : MonoBehaviour
         {
             Vector3 gravityUp = Vector3.zero;
 
-            gravityUp = (transform.position - Gravity.transform.position).normalized;
+            if (Gravity.FixedDirection)
+            {
+                gravityUp = Gravity.transform.up;
 
+            }
+            else
+            {
+
+                gravityUp = (transform.position - Gravity.transform.position).normalized;
+
+            }
             Vector3 localUp = transform.up;
 
-            Quaternion targetRotation = Quaternion.FromToRotation(localUp, gravityUp)*transform.rotation;
+            Quaternion targetRotation = Quaternion.FromToRotation(localUp, gravityUp) * transform.rotation;
 
-            transform.up = Vector3.Lerp(transform.up, gravityUp, RotationSpeed*Time.deltaTime);
+            transform.up = Vector3.Lerp(transform.up, gravityUp, RotationSpeed * Time.deltaTime);
 
             //push down for gravity
-            Rb.AddForce((transform.position - Gravity.transform.position).normalized);  
+            Rb.AddForce((-gravityUp * Gravity.Gravity) * Rb.mass);
         }
     }
 }
